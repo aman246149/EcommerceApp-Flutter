@@ -1,26 +1,23 @@
-
-
 import 'package:ecommerce/Screens/Registration/RegistrationForm.dart';
-import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class Registration extends StatelessWidget {
+  var KAppBarStyle = TextStyle(color: Colors.white, fontSize: 50);
+  var KAppBarTitleStyle = TextStyle(color: Colors.white, fontSize: 20);
 
-  var KAppBarStyle=TextStyle(color: Colors.white,fontSize: 50);
-  var KAppBarTitleStyle=TextStyle(color: Colors.white,fontSize: 20);
-
-  var KBackButtonStyle=Colors.white;
+  var KBackButtonStyle = Colors.white;
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset:true,
+      child: Scaffold(
+          resizeToAvoidBottomInset: true,
           body: Stack(
             fit: StackFit.expand,
             children: [
-              Image.network("https://images.unsplash.com/photo-1634412789413-ac718e7f1269?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=60",
+              Image.network(
+                "https://images.unsplash.com/photo-1634412789413-ac718e7f1269?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=60",
                 fit: BoxFit.cover,
               ),
               Padding(
@@ -28,28 +25,54 @@ class Registration extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   child: ListView(
-
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(Icons.arrow_back_ios,color: KBackButtonStyle,),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: KBackButtonStyle,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 20),
-
-                      Text("Glad To Meet You",style: KAppBarStyle,),
+                      Text(
+                        "Glad To Meet You",
+                        style: KAppBarStyle,
+                      ),
                       SizedBox(height: 20),
-
-                      Text("Create Your new Account For Future Uses",style: KAppBarTitleStyle,),
+                      Text(
+                        "Create Your new Account For Future Uses",
+                        style: KAppBarTitleStyle,
+                      ),
                       SizedBox(height: 40),
                       RegistrationForm(),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        child: Text(
+                          "Already a User ? Sign In here",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
             ],
-          )
-        ),);
+          )),
+    );
   }
 }

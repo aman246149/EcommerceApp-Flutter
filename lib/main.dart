@@ -1,14 +1,20 @@
 import 'package:ecommerce/Providers/ThemeSwitcherProvider.dart';
 import 'package:ecommerce/Screens/Cart%20Screen/Cart.dart';
 import 'package:ecommerce/Screens/HomePage/HomePage.dart';
+import 'package:ecommerce/Screens/Login/Login.dart';
 import 'package:ecommerce/Screens/ProductDetailsScreen/ProductDetails.dart';
-import './Providers/ProductDetailsScreenProvider.dart';
+import 'package:ecommerce/Screens/Registration/Registration.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import './Providers/CartProvider.dart';
+import './Providers/ProductDetailsScreenProvider.dart';
 import 'Providers/FavouriteProvider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => ThemeSwitcherProvider()),
     ChangeNotifierProvider(create: (_) => productDetailsScreen()),
@@ -34,7 +40,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/productDetails': (_) => ProductDetails(),
-        '/cart': (_) => Cart()
+        '/cart': (_) => Cart(),
+        '/signup': (_) => Registration(),
+        '/login': (_) => Login()
       },
     );
   }
