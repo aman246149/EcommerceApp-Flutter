@@ -1,8 +1,10 @@
+import 'package:ecommerce/Providers/RegistrationProvider.dart';
 import 'package:ecommerce/Providers/ThemeSwitcherProvider.dart';
 import 'package:ecommerce/Screens/Cart%20Screen/Cart.dart';
 import 'package:ecommerce/Screens/HomePage/HomePage.dart';
 import 'package:ecommerce/Screens/Login/Login.dart';
 import 'package:ecommerce/Screens/ProductDetailsScreen/ProductDetails.dart';
+import 'package:ecommerce/Screens/ProductScreen/ProductScreen.dart';
 import 'package:ecommerce/Screens/Registration/Registration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ void main() async {
       create: (_) => CartProvider(),
     ),
     ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+    ChangeNotifierProvider(create: (_) => RegistrationProvider()),
   ], child: const MyApp()));
 }
 
@@ -42,7 +45,8 @@ class MyApp extends StatelessWidget {
         '/productDetails': (_) => ProductDetails(),
         '/cart': (_) => Cart(),
         '/signup': (_) => Registration(),
-        '/login': (_) => Login()
+        '/login': (_) => Login(),
+        '/': (_) => ProductScreen()
       },
     );
   }
