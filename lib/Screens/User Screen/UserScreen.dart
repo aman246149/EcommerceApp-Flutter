@@ -1,4 +1,6 @@
+import 'package:ecommerce/Providers/RegistrationProvider.dart';
 import 'package:ecommerce/Providers/ThemeSwitcherProvider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +9,10 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var firebaseUser = context.watch<User?>();
+
+    print(firebaseUser?.email);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -19,16 +25,32 @@ class UserScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RaisedButton(
-                    color: Colors.black,
-                    onPressed: () {
-                      Navigator.pushNamed(context, ('/signup'));
-                    },
-                    child: Text(
-                      "Sign Up or LogIn",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  firebaseUser != null
+                      ? RaisedButton(
+                          color: Colors.black,
+                          onPressed: () {
+                            print("SignOut");
+                          },
+                          child: Text(
+                            "Sign Out",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : RaisedButton(
+                          color: Colors.black,
+                          onPressed: () async {
+                            if (firebaseUser != null) {
+                              await context
+                                  .read<RegistrationProvider>()
+                                  .signOut();
+                            }
+                            Navigator.pushNamed(context, ('/signup'));
+                          },
+                          child: Text(
+                            "Sign Up or LogIn",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                   RaisedButton(
                     color: Colors.black,
                     onPressed: () {

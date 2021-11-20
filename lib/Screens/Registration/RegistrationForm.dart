@@ -2,18 +2,25 @@ import 'package:ecommerce/Providers/RegistrationProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RegistrationForm extends StatelessWidget {
-  static final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+class RegistrationForm extends StatefulWidget {
+  @override
+  State<RegistrationForm> createState() => _RegistrationFormState();
+}
 
+class _RegistrationFormState extends State<RegistrationForm> {
   final KbuttonTextStyle = TextStyle(fontSize: 25, color: Colors.white);
 
-  String email = "";
-  String password = "";
+  TextEditingController email = new TextEditingController();
+
+  TextEditingController password = new TextEditingController();
+
+  bool isLoggedIn = true;
+
+  var errors = "";
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
       child: Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -21,13 +28,22 @@ class RegistrationForm extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
           children: [
+            errors != "signed in"
+                ? Text(
+                    errors,
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Text(""),
             TextFormField(
               decoration: InputDecoration(hintText: "Enter Email"),
+              controller: email,
               validator: (value) {
+                print(value);
                 if (value == null || value.isEmpty) {
                   return "Please enter Email";
-                } else {
-                  email = value;
                 }
                 return null;
               },
@@ -36,12 +52,11 @@ class RegistrationForm extends StatelessWidget {
               height: 15,
             ),
             TextFormField(
+              controller: password,
               decoration: InputDecoration(hintText: "Enter Password"),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Please enter password";
-                } else {
-                  password = value;
                 }
                 return null;
               },
@@ -53,9 +68,8 @@ class RegistrationForm extends StatelessWidget {
               decoration: InputDecoration(hintText: "Enter PhoneNumber"),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Please enter some text";
+                  return "Please enter phno";
                 }
-                return null;
               },
             ),
             SizedBox(
@@ -64,21 +78,20 @@ class RegistrationForm extends StatelessWidget {
             FlatButton(
                 color: Colors.redAccent.shade100,
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
+                  context
+                      .read<RegistrationProvider>()
+                      .signUp(email.text.toString(), password.text.toString())
+                      .then((value) {
+                    setState(() {
+                      errors = value;
+                      print(errors);
+                    });
 
-                    print(email);
-                    print(password);
-
-                    context
-                        .read<RegistrationProvider>()
-                        .registerUserByEmailAndPassword(email, password);
-                    print(Provider.of<RegistrationProvider>(context,
-                            listen: false)
-                        .userCredential);
-                  }
+                    if (errors == "signed in") {
+                      print("go home");
+                      Navigator.pushNamed(context, '/home');
+                    }
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

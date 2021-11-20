@@ -59,7 +59,7 @@ class Login extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Already a User ? Sign In here",
+                        "Create Account here?",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,

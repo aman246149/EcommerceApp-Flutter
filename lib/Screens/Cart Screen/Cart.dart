@@ -3,12 +3,10 @@ import 'package:ecommerce/Providers/ProductDetailsScreenProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../Providers/CartProvider.dart';
 
 class Cart extends StatelessWidget {
-
-
-
   @override
   Widget build(BuildContext context) {
     var id = context.watch<productDetailsScreen>().id;
@@ -63,7 +61,9 @@ class Cart extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0)),
                     color: Colors.black,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/checkout");
+                    },
                     child: Text(
                       "PLACE ORDER",
                       style: TextStyle(color: Colors.white),
@@ -207,11 +207,24 @@ class Cart extends StatelessWidget {
                                                   fontWeight: FontWeight.w600),
                                             )),
                                         InkWell(
-                                          onTap: (){
-                                            productDetailsScreen item=new productDetailsScreen(id,title,price,description,category,image,ratingg);
-                                            context.read<FavouriteProvider>().addToFavourite(item);
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(content: Text('Succssfully Added in your Favourites')),
+                                          onTap: () {
+                                            productDetailsScreen item =
+                                                new productDetailsScreen(
+                                                    id,
+                                                    title,
+                                                    price,
+                                                    description,
+                                                    category,
+                                                    image,
+                                                    ratingg);
+                                            context
+                                                .read<FavouriteProvider>()
+                                                .addToFavourite(item);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      'Succssfully Added in your Favourites')),
                                             );
                                           },
                                           child: Text(

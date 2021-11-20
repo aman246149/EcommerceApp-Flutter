@@ -1,5 +1,4 @@
 import 'package:ecommerce/Providers/RegistrationProvider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,17 +6,20 @@ class LoginForm extends StatefulWidget {
   static final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<LoginForm> createState() => _LoginState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginState extends State<LoginForm> {
   final KbuttonTextStyle = TextStyle(fontSize: 25, color: Colors.white);
 
-  String email = "";
+  TextEditingController email = new TextEditingController();
 
-  String password = "";
+  TextEditingController password = new TextEditingController();
 
-  String error = "";
+  bool isLoggedIn = true;
+  final _formKey = GlobalKey<FormState>();
+
+  var errors = "";
 
   @override
   Widget build(BuildContext context) {
@@ -30,22 +32,22 @@ class _LoginFormState extends State<LoginForm> {
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
           children: [
-            error.isNotEmpty
+            errors != "signed in"
                 ? Text(
-                    error,
+                    errors,
                     style: TextStyle(
                         color: Colors.red,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 25),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   )
                 : Text(""),
             TextFormField(
               decoration: InputDecoration(hintText: "Enter Email"),
+              controller: email,
               validator: (value) {
+                print(value);
                 if (value == null || value.isEmpty) {
                   return "Please enter Email";
-                } else {
-                  email = value;
                 }
                 return null;
               },
@@ -54,12 +56,11 @@ class _LoginFormState extends State<LoginForm> {
               height: 15,
             ),
             TextFormField(
+              controller: password,
               decoration: InputDecoration(hintText: "Enter Password"),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Please enter password";
-                } else {
-                  password = value;
                 }
                 return null;
               },
@@ -73,39 +74,20 @@ class _LoginFormState extends State<LoginForm> {
             FlatButton(
                 color: Colors.redAccent.shade100,
                 onPressed: () {
-                  if (LoginForm._formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
-                    context
-                        .read<RegistrationProvider>()
-                        .signInWithEmailAndPassword(email, password);
-                    // var user=Provider.of<RegistrationProvider>(context, listen: false).userCredential;
-                    var isErrorPassword = Provider.of<RegistrationProvider>(
-                            context,
-                            listen: false)
-                        .wrongPassword;
-                    var isErrorNoUser = Provider.of<RegistrationProvider>(
-                            context,
-                            listen: false)
-                        .noUserFoundForThismale;
+                  context
+                      .read<RegistrationProvider>()
+                      .signIn(email.text.toString(), password.text.toString())
+                      .then((value) {
+                    setState(() {
+                      errors = value;
+                      print(errors);
+                    });
 
-                    if (!isErrorNoUser.isEmpty) {
-                      setState(() {
-                        error = isErrorNoUser;
-                      });
-                      return;
+                    if (errors == "signed in") {
+                      print("go home");
+                      Navigator.pushNamed(context, '/home');
                     }
-
-                    if (!isErrorPassword.isEmpty) {
-                      print(isErrorPassword);
-                      setState(() {
-                        error = isErrorPassword;
-                      });
-                      return;
-                    }
-                    Navigator.pushNamed(context, '/product');
-                  }
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

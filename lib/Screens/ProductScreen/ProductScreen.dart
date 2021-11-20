@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:ecommerce/Components/CommonAppBar.dart';
-import 'package:ecommerce/Providers/CartProvider.dart';
 
-import '../../Providers/ProductDetailsScreenProvider.dart';
+import 'package:ecommerce/Components/CommonAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
+import '../../Providers/ProductDetailsScreenProvider.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -23,9 +23,11 @@ class _ProductScreenState extends State<ProductScreen> {
     var data = await client.get(url);
     var response = await data.body;
     var jsonResponse = jsonDecode(response);
-    setState(() {
-      productsList = jsonResponse;
-    });
+    if (mounted) {
+      setState(() {
+        productsList = jsonResponse;
+      });
+    }
   }
 
   @override
@@ -36,8 +38,24 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    fetchProductList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //right now only admin can add products this funcitioality i will add later
+        },
+        child: Icon(
+          Icons.add,
+          size: 25,
+        ),
+      ),
       body: Column(
         children: [
           CommonAppBar(),

@@ -1,11 +1,13 @@
 import 'package:ecommerce/Providers/RegistrationProvider.dart';
 import 'package:ecommerce/Providers/ThemeSwitcherProvider.dart';
 import 'package:ecommerce/Screens/Cart%20Screen/Cart.dart';
+import 'package:ecommerce/Screens/CheckOut/CheckOut.dart';
 import 'package:ecommerce/Screens/HomePage/HomePage.dart';
 import 'package:ecommerce/Screens/Login/Login.dart';
 import 'package:ecommerce/Screens/ProductDetailsScreen/ProductDetails.dart';
 import 'package:ecommerce/Screens/ProductScreen/ProductScreen.dart';
 import 'package:ecommerce/Screens/Registration/Registration.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +26,13 @@ void main() async {
       create: (_) => CartProvider(),
     ),
     ChangeNotifierProvider(create: (_) => FavouriteProvider()),
-    ChangeNotifierProvider(create: (_) => RegistrationProvider()),
+    Provider<RegistrationProvider>(
+      create: (_) => RegistrationProvider(FirebaseAuth.instance),
+    ),
+    StreamProvider(
+        create: (context) =>
+            context.read<RegistrationProvider>().authStateChanges,
+        initialData: null)
   ], child: const MyApp()));
 }
 
@@ -46,7 +54,9 @@ class MyApp extends StatelessWidget {
         '/cart': (_) => Cart(),
         '/signup': (_) => Registration(),
         '/login': (_) => Login(),
-        '/': (_) => ProductScreen()
+        '/product': (_) => ProductScreen(),
+        '/home': (_) => HomePage(),
+        '/checkout': (_) => CheckOut()
       },
     );
   }
