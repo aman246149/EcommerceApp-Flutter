@@ -1,5 +1,6 @@
 import 'package:ecommerce/Providers/RegistrationProvider.dart';
 import 'package:ecommerce/Providers/ThemeSwitcherProvider.dart';
+import 'package:ecommerce/Screens/AddItems/AddProduct.dart';
 import 'package:ecommerce/Screens/Cart%20Screen/Cart.dart';
 import 'package:ecommerce/Screens/CheckOut/CheckOut.dart';
 import 'package:ecommerce/Screens/HomePage/HomePage.dart';
@@ -56,7 +57,8 @@ class MyApp extends StatelessWidget {
         '/login': (_) => Login(),
         '/product': (_) => ProductScreen(),
         '/home': (_) => HomePage(),
-        '/checkout': (_) => CheckOut()
+        '/checkout': (_) => CheckOut(),
+        '/addproduct': (_) => AddProduct()
       },
     );
   }

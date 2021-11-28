@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce/Components/CommonAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   void fetchProductList() async {
     var client = http.Client();
+
     var url = Uri.parse("https://fakestoreapi.com/products");
     var data = await client.get(url);
     var response = await data.body;
@@ -28,6 +30,27 @@ class _ProductScreenState extends State<ProductScreen> {
         productsList = jsonResponse;
       });
     }
+
+    FirebaseFirestore.instance
+        .collection('products')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print(doc["productImageUrl"].runtimeType);
+        var productMap = {
+          'description': doc["productDescription"].toString(),
+          'image': doc["productImageUrl"].toString(),
+          'title': doc["productName"].toString(),
+          'price': doc["productPrice"].toString(),
+          'rating': doc["productRating"]
+        };
+        print(productMap.length);
+        setState(() {
+          productsList.add(productMap);
+        });
+        print(productsList[productsList.length - 1]);
+      });
+    });
   }
 
   @override
@@ -50,6 +73,7 @@ class _ProductScreenState extends State<ProductScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //right now only admin can add products this funcitioality i will add later
+          Navigator.pushNamed(context, '/addproduct');
         },
         child: Icon(
           Icons.add,
